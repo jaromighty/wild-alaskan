@@ -29,7 +29,7 @@ class Recipe extends Model
     {
         $slug = Str::slug($this->getAttribute('name'));
 
-        $slugCount = self::where('slug', $slug)->count();
+        $slugCount = self::where('slug', 'like', $slug.'%')->count();
         if ($slugCount > 0) {
             $slug .= '-'.$slugCount + 1;
         }

@@ -4,12 +4,15 @@ namespace Database\Factories;
 
 use App\Models\Ingredient;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Foundation\Testing\WithFaker;
 
 /**
  * @extends Factory<Ingredient>
  */
 class IngredientFactory extends Factory
 {
+    use WithFaker;
+
     /**
      * Define the model's default state.
      *

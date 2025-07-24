@@ -4,12 +4,15 @@ namespace Database\Factories;
 
 use App\Models\Recipe;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Foundation\Testing\WithFaker;
 
 /**
  * @extends Factory<Recipe>
  */
 class RecipeFactory extends Factory
 {
+    use WithFaker;
+
     /**
      * Define the model's default state.
      *
@@ -18,9 +21,9 @@ class RecipeFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->words(3, true),
-            'description' => $this->faker->paragraph,
-            'author' => $this->faker->email,
+            'name' => fake()->words(3, true),
+            'description' => fake()->paragraph,
+            'author' => fake()->email,
         ];
     }
 }

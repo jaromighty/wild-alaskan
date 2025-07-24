@@ -7,11 +7,10 @@ use Tests\TestCase;
 
 class RecipeSearchTest extends TestCase
 {
-    /**
-     * A basic unit test example.
-     */
-    public function test_search_recipes_for_potato(): void
+    protected function setUp(): void
     {
+        parent::setUp();
+
         $recipeOne = Recipe::factory()->create([
             'name' => 'Crispy Oven-Roasted Potatoes',
             'description' => 'Golden brown potatoes with a crispy exterior and fluffy inside — perfect as a side dish.',
@@ -51,8 +50,21 @@ class RecipeSearchTest extends TestCase
             ['description' => 'Sprinkle cheese over the top and cook until melted.'],
             ['description' => 'Serve hot for a satisfying potato-filled breakfast.'],
         ]);
+    }
 
+    /**
+     * A basic unit test example.
+     */
+    public function test_search_recipe_name_and_description_for_potato(): void
+    {
         $response = $this->post(route('search', ['search' => 'potato']));
+        $recipes = $response->json();
+        $this->assertGreaterThan(0, count($recipes));
+    }
+
+    public function test_search_recipe_ingredients_and_steps_for_eggs(): void
+    {
+        $response = $this->post(route('search', ['search' => 'eggs']));
         $recipes = $response->json();
         $this->assertGreaterThan(0, count($recipes));
     }

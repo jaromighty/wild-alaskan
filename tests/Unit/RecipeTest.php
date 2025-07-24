@@ -5,13 +5,10 @@ namespace Tests\Unit;
 use App\Models\Ingredient;
 use App\Models\Recipe;
 use App\Models\Step;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class RecipeTest extends TestCase
 {
-    use RefreshDatabase;
-
     /**
      * A basic unit test example.
      */

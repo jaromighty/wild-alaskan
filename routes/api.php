@@ -14,4 +14,4 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('api/search', RecipeSearchController::class)->name('search');
+Route::get('search', RecipeSearchController::class)->name('search');

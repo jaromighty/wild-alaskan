@@ -14,21 +14,13 @@ class RecipeResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $ingredients = [];
-        foreach ($this->ingredients as $ingredient) {
-            $ingredients[] = $ingredient->description;
-        }
-        $steps = [];
-        foreach ($this->steps as $step) {
-            $steps[] = $step->description;
-        }
-
         return [
+            'id' => $this->id,
             'name' => $this->name,
             'description' => $this->description,
             'author' => $this->author,
-            'ingredients' => $ingredients,
-            'steps' => $steps,
+            'ingredients' => $this->whenLoaded('ingredients', $this->ingredients),
+            'steps' => $this->whenLoaded('steps', $this->steps),
         ];
     }
 }

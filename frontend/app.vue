@@ -1,9 +1,9 @@
 <template>
     <div class="mt-12">
-        <form class="flex items-center max-w-lg mx-auto">
+        <form class="flex items-center max-w-lg mx-auto" @submit.prevent="handleSearch">
             <label for="search" class="sr-only">Search</label>
             <div class="relative w-full">
-                <input type="text" id="search"
+                <input type="text" id="search" v-model="search"
                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                        placeholder="Search recipes" required/>
             </div>
@@ -17,5 +17,36 @@
                 Search
             </button>
         </form>
+
+        <div class="mt-8">
+            <RecipeList :recipes="recipes" />
+        </div>
     </div>
 </template>
+
+<script setup>
+import { ref } from 'vue';
+
+const search = ref('');
+const recipes = ref([]);
+
+const queryRecipes = async () => {
+    try {
+        const {data} = await $fetch(`/api/search?search=${search.value}`, {
+            method: 'GET',
+            baseURL: 'http://localhost:8888',
+            headers: {
+                'Accept': 'application/json',
+            },
+            data: {search: search.value}
+        });
+        recipes.value = data;
+    } catch (error) {
+        console.error('Failed to query recipes: ' + error);
+    }
+}
+
+const handleSearch = () => {
+    queryRecipes();
+}
+</script>

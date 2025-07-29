@@ -52,19 +52,23 @@ class RecipeSearchTest extends TestCase
         ]);
     }
 
-    /**
-     * A basic unit test example.
-     */
     public function test_search_recipe_name_and_description_for_potato(): void
     {
-        $response = $this->post(route('search', ['search' => 'potato']));
+        $response = $this->get(route('search', ['search' => 'potato']));
         $recipes = $response->json();
         $this->assertGreaterThan(0, count($recipes));
     }
 
     public function test_search_recipe_ingredients_and_steps_for_eggs(): void
     {
-        $response = $this->post(route('search', ['search' => 'eggs']));
+        $response = $this->get(route('search', ['search' => 'eggs']));
+        $recipes = $response->json();
+        $this->assertGreaterThan(0, count($recipes));
+    }
+
+    public function test_search_recipe_author(): void
+    {
+        $response = $this->get(route('search', ['author' => 'kevin.breakfast@recipes.test']));
         $recipes = $response->json();
         $this->assertGreaterThan(0, count($recipes));
     }

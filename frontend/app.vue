@@ -1,11 +1,24 @@
 <template>
     <div class="mt-12">
-        <form class="flex items-center max-w-lg mx-auto" @submit.prevent="handleSearch">
-            <label for="search" class="sr-only">Search</label>
-            <div class="relative w-full">
-                <input type="text" id="search" v-model="search"
-                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                       placeholder="Search recipes" required/>
+        <form class="flex items-center max-w-lg mx-auto gap-x-1" @submit.prevent="handleSearch">
+            <div>
+                <label for="keyword" class="sr-only">Keyword</label>
+                <div class="relative w-full">
+                    <input type="text" id="keyword" v-model="keyword"
+                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                           placeholder="Search recipes" required/>
+                </div>
+            </div>
+            <div>
+                <label for="author" class="sr-only">Author</label>
+                <div class="relative w-full">
+                    <select id="author" v-model="author"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    >
+                        <option value="" disabled selected hidden>Select an author</option>
+                        <option v-for="author in authors" :value="author.email" :key="author.email">{{ author.email }}</option>
+                    </select>
+                </div>
             </div>
             <button type="submit"
                     class="inline-flex items-center py-2.5 px-3 ms-2 text-sm font-medium text-white bg-blue-700 rounded-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
@@ -27,18 +40,38 @@
 <script setup>
 import { ref } from 'vue';
 
-const search = ref('');
+const authors = ref([]);
 const recipes = ref([]);
 
-const queryRecipes = async () => {
+const search = ref('');
+const keyword = ref('');
+const author = ref('');
+
+const getAuthors = async () => {
     try {
-        const {data} = await $fetch(`/api/search?search=${search.value}`, {
+        const {data} = await $fetch(`/api/authors`, {
             method: 'GET',
             baseURL: 'http://localhost:8888',
             headers: {
                 'Accept': 'application/json',
             },
-            data: {search: search.value}
+        });
+        authors.value = data;
+    } catch (error) {
+        console.error('Failed to query authors: ' + error);
+    }
+}
+getAuthors();
+
+const queryRecipes = async () => {
+    try {
+        const {data} = await $fetch(`/api/search?search=${keyword.value}&author=${author.value}`, {
+            method: 'GET',
+            baseURL: 'http://localhost:8888',
+            headers: {
+                'Accept': 'application/json',
+            },
+            data: {search: keyword.value}
         });
         recipes.value = data;
     } catch (error) {

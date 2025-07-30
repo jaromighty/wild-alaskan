@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthorController;
+use App\Http\Controllers\RecipeController;
 use App\Http\Controllers\RecipeSearchController;
 use Illuminate\Support\Facades\Route;
 
@@ -18,3 +19,5 @@ use Illuminate\Support\Facades\Route;
 Route::get('search', RecipeSearchController::class)->name('search');
 
 Route::get('authors', [AuthorController::class, 'index'])->name('authors');
+
+Route::get('/recipes/{recipe}', [RecipeController::class, 'show'])->name('recipe.show');

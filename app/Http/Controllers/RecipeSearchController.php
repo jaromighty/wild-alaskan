@@ -34,7 +34,7 @@ class RecipeSearchController extends Controller
                 $query->where('author', $author);
             })
             ->with(['ingredients', 'steps'])
-            ->paginate(1);
+            ->paginate();
 
         return RecipeResource::collection($recipes);
     }

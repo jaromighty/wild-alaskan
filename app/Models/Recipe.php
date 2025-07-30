@@ -18,6 +18,11 @@ class Recipe extends Model
         'slug',
     ];
 
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
+
     protected static function booted(): void
     {
         static::creating(function ($recipe) {

@@ -1,5 +1,5 @@
 <template>
-    <div class="mt-12">
+    <div class="mt-12 space-y-8">
         <form class="flex items-center max-w-lg mx-auto gap-x-1" @submit.prevent="handleSearch">
             <div>
                 <label for="keyword" class="sr-only">Keyword</label>
@@ -16,7 +16,10 @@
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     >
                         <option value="" disabled selected hidden>Select an author</option>
-                        <option v-for="author in authors" :value="author.email" :key="author.email">{{ author.email }}</option>
+                        <option v-for="author in authors" :value="author.email" :key="author.email">{{
+                                author.email
+                            }}
+                        </option>
                     </select>
                 </div>
             </div>
@@ -31,16 +34,40 @@
             </button>
         </form>
 
-        <div class="mt-8">
-            <RecipeList :recipes="recipes" />
+        <div>
+            <RecipeList :recipes="recipes"/>
+        </div>
+
+        <div v-if="pagination.total > pagination.per_page">
+            <div class="flex justify-between mx-auto max-w-2xl">
+                <!-- Previous Button -->
+                <a href="#"
+                   class="flex items-center justify-center px-3 h-8 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                    Previous
+                </a>
+
+                <!-- Next Button -->
+                <a href="#"
+                   class="flex items-center justify-center px-3 h-8 ms-3 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                    Next
+                </a>
+            </div>
         </div>
     </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import {ref} from 'vue';
 
 const authors = ref([]);
+const pages = ref({
+    next: '',
+    prev: '',
+});
+const pagination = ref({
+    per_page: 0,
+    total: 0,
+});
 const recipes = ref([]);
 
 const search = ref('');
@@ -65,7 +92,7 @@ getAuthors();
 
 const queryRecipes = async () => {
     try {
-        const {data} = await $fetch(`/api/search?search=${keyword.value}&author=${author.value}`, {
+        const {data, links, meta} = await $fetch(`/api/search?search=${keyword.value}&author=${author.value}`, {
             method: 'GET',
             baseURL: 'http://localhost:8888',
             headers: {
@@ -74,6 +101,8 @@ const queryRecipes = async () => {
             data: {search: keyword.value}
         });
         recipes.value = data;
+        pages.value = links
+        pagination.value = meta;
     } catch (error) {
         console.error('Failed to query recipes: ' + error);
     }
